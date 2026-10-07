@@ -101,6 +101,26 @@ $config->setLogLevel('DEBUG');
 
 * Pros
     * Simple
+    * Support plugins (e.g. csv, gRPC)
 * Cons
-    * Do not support plugins (e.g. csv, gRPC)
     * Only single sink (stdout)
+
+### Windows process isolation and Pact FFI 0.5.9
+
+Pact FFI 0.5.9 changed `pactffi_init_with_log_level` to write to stderr instead of
+stdout. PHPUnit's process-isolation runner reads the child process's stdout to
+EOF before draining stderr. On Windows, DEBUG logs can fill the stderr pipe:
+the child blocks writing logs while PHPUnit waits for the child to finish.
+
+Pact-PHP uses its existing logger singleton and an explicit stdout sink for
+config-based logging. This preserves the previous logging destination and DEBUG
+output without removing `--process-isolation`. An already-applied logger, such as
+the file sink configured through the PHPUnit extension, is left unchanged.
+The first applied logger determines the destination and level for the process.
+
+The upgrade intentionally stops at 0.5.9. The published 0.5.10 Linux x86_64 library
+was observed returning byte `2` instead of `0` on false-result paths, including
+`pactffi_mock_server_matched` for a nonexistent server and `pactffi_with_body` for
+an invalid handle. Both PHP FFI and Python ctypes interpret this as true.
+Addressing those invalid native boolean returns is a separate upstream task;
+the PHP assertions must not be weakened to hide them.
