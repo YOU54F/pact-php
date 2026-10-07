@@ -32,10 +32,10 @@
                   "value": "image/jpeg"
                 }
               ]
-            }
-          },
-          "header": {},
-          "status": {}
+            },
+            "header": {},
+            "status": {}
+          }
         },
         "status": 200
       }
