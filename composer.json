@@ -86,7 +86,8 @@
             "composer run-example:xml",
             "composer run-example:graphql",
             "composer run-example:form-urlencoded",
-            "composer run-example:server-sent-events"
+            "composer run-example:server-sent-events",
+            "composer run-example:repeated-headers"
         ],
         "run-examples:windows": [
             "composer run-example:binary:windows",
@@ -102,7 +103,8 @@
             "composer run-example:xml:windows",
             "composer run-example:graphql:windows",
             "composer run-example:form-urlencoded:windows",
-            "composer run-example:server-sent-events:windows"
+            "composer run-example:server-sent-events:windows",
+            "composer run-example:repeated-headers:windows"
         ],
         "run-example:binary:windows": [
             "powershell -Command \"if (Test-Path 'example/binary/pacts/binaryConsumer-binaryProvider.json') { Remove-Item 'example/binary/pacts/binaryConsumer-binaryProvider.json' }\"",
@@ -239,6 +241,14 @@
             "rm -f example/server-sent-events/pacts/sseConsumer-sseProvider.json",
             "cd example/server-sent-events/consumer && phpunit",
             "cd example/server-sent-events/provider && phpunit"
+        ],
+        "run-example:repeated-headers:windows": [
+            "powershell -Command \"if (Test-Path 'example/repeated-headers/pacts/repeatedHeadersConsumer-repeatedHeadersProvider.json') { Remove-Item 'example/repeated-headers/pacts/repeatedHeadersConsumer-repeatedHeadersProvider.json' }\"",
+            "cd example/repeated-headers/consumer && phpunit --process-isolation"
+        ],
+        "run-example:repeated-headers": [
+            "rm -f example/repeated-headers/pacts/repeatedHeadersConsumer-repeatedHeadersProvider.json",
+            "cd example/repeated-headers/consumer && phpunit"
         ]
     },
     "extra": {

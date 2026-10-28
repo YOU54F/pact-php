@@ -291,6 +291,19 @@ class Client implements ClientInterface
         return FFI::string($result);
     }
 
+    public function mockServerLogs(int $port): string
+    {
+        $method = 'pactffi_mock_server_logs';
+        $result = $this->call($method, $port);
+        if ($result === null) {
+            return '';
+        }
+        if (!is_string($result)) {
+            throw new InvalidResultException(sprintf('Invalid result of "%s". Expected "string", but got "%s"', $method, get_debug_type($result)));
+        }
+        return $result;
+    }
+
     public function writePactFile(int $port, string $directory, bool $overwrite): int
     {
         $method = 'pactffi_write_pact_file';

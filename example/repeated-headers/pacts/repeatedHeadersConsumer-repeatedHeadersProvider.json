@@ -1,0 +1,137 @@
+{
+  "consumer": {
+    "name": "repeatedHeadersConsumer"
+  },
+  "interactions": [
+    {
+      "description": "H1 two field lines match two values",
+      "request": {
+        "headers": {
+          "X-Request": "a, b"
+        },
+        "method": "GET",
+        "path": "/headers"
+      },
+      "response": {
+        "status": 200
+      }
+    },
+    {
+      "description": "H2 one comma-joined field line matches two values",
+      "request": {
+        "headers": {
+          "X-Request": "a, b"
+        },
+        "method": "GET",
+        "path": "/headers"
+      },
+      "response": {
+        "status": 200
+      }
+    },
+    {
+      "description": "H3 values containing commas, one per field line",
+      "request": {
+        "headers": {
+          "X-Sunset": "Sat, 01 Jan 2028 00:00:00 GMT, Sun, 02 Jan 2028 00:00:00 GMT"
+        },
+        "method": "GET",
+        "path": "/headers"
+      },
+      "response": {
+        "status": 200
+      }
+    },
+    {
+      "description": "H5 Cache-Control comma-joined field line matches two values",
+      "request": {
+        "headers": {
+          "Cache-Control": "no-cache, no-store"
+        },
+        "method": "GET",
+        "path": "/headers"
+      },
+      "response": {
+        "status": 200
+      }
+    },
+    {
+      "description": "H6a one regex matcher per index",
+      "request": {
+        "headers": {
+          "X-Request": "first-1, first-2"
+        },
+        "matchingRules": {
+          "header": {
+            "X-Request": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "^first-\\d+$"
+                }
+              ]
+            }
+          }
+        },
+        "method": "GET",
+        "path": "/headers"
+      },
+      "response": {
+        "status": 200
+      }
+    },
+    {
+      "description": "H6b quoted value containing a comma, one per field line",
+      "request": {
+        "headers": {
+          "X-Request": "\"x , y\", z"
+        },
+        "method": "GET",
+        "path": "/headers"
+      },
+      "response": {
+        "status": 200
+      }
+    },
+    {
+      "description": "H8a Link values containing commas, one per field line",
+      "request": {
+        "headers": {
+          "Link": "<https://a.example/x,y>; rel=\"a\", <https://b.example/>; rel=\"b\""
+        },
+        "method": "GET",
+        "path": "/headers"
+      },
+      "response": {
+        "status": 200
+      }
+    },
+    {
+      "description": "H8b Link values containing commas, one comma-joined field line",
+      "request": {
+        "headers": {
+          "Link": "<https://a.example/x,y>; rel=\"a\", <https://b.example/>; rel=\"b\""
+        },
+        "method": "GET",
+        "path": "/headers"
+      },
+      "response": {
+        "status": 200
+      }
+    }
+  ],
+  "metadata": {
+    "pactRust": {
+      "ffi": "0.5.12",
+      "mockserver": "2.2.6",
+      "models": "1.3.17"
+    },
+    "pactSpecification": {
+      "version": "3.0.0"
+    }
+  },
+  "provider": {
+    "name": "repeatedHeadersProvider"
+  }
+}

@@ -136,11 +136,14 @@ class SyncMessageBuilderTest extends TestCase
     #[TestWith([true])]
     public function testVerify(bool $matched): void
     {
+        $result = new VerifyResult($matched, $matched ? '' : '[{"type":"request-mismatch"}]', 'mock server logs');
         $this->driver
             ->expects($this->once())
             ->method('verifyMessage')
-            ->willReturn(new VerifyResult($matched, ''));
+            ->willReturn($result);
+        $this->assertNull($this->builder->getVerifyResult());
         $this->assertSame($matched, $this->builder->verify());
+        $this->assertSame($result, $this->builder->getVerifyResult());
     }
 
     private function getMessage(): Message

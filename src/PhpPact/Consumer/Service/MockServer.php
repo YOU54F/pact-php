@@ -42,6 +42,7 @@ class MockServer implements MockServerInterface
         usleep(10000); // Wait for last request reach mock server (TODO find better way)
         try {
             $matched = $this->isMatched();
+            $logs = $this->getLogs();
 
             if ($matched) {
                 $this->writePact();
@@ -49,7 +50,7 @@ class MockServer implements MockServerInterface
                 $mismatches = $this->getMismatches();
             }
 
-            return new VerifyResult($matched, $mismatches ?? '');
+            return new VerifyResult($matched, $mismatches ?? '', $logs);
         } finally {
             $this->cleanUp();
         }
@@ -94,5 +95,10 @@ class MockServer implements MockServerInterface
     private function getMismatches(): string
     {
         return $this->client->mockServerMismatches($this->config->getPort());
+    }
+
+    private function getLogs(): string
+    {
+        return $this->client->mockServerLogs($this->config->getPort());
     }
 }

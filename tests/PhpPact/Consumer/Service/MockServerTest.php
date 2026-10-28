@@ -67,14 +67,17 @@ class MockServerTest extends TestCase
         $this->config->setPactDir($this->pactDir);
         $this->expectsMockServerMatched($this->port, $matched);
         $this->expectsWritePactFile($this->port, $this->pactDir, false, 0, $matched);
-        $this->expectsMockServerMismatches($this->port, '', $matched);
+        $mismatches = $matched ? '' : '[{"type":"request-mismatch"}]';
+        $this->expectsMockServerMismatches($this->port, $mismatches, $matched);
+        $this->expectsMockServerLogs($this->port, 'mock server logs');
         $this->expectsCleanupMockServer($this->port, true);
         $this->pactDriver
             ->expects($this->once())
             ->method('cleanUp');
         $result = $this->mockServer->verify();
         $this->assertSame($matched, $result->matched);
-        $this->assertSame('', $result->mismatches);
+        $this->assertSame($mismatches, $result->mismatches);
+        $this->assertSame('mock server logs', $result->logs);
     }
 
     #[TestWith([0, WriteMode::OVERWRITE])]
