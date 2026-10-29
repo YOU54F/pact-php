@@ -112,7 +112,8 @@ jobs:
 
       - name: Install plugins
         run: |
-          pact plugin install matt --version 0.1.1 -y
+          # matt is not in the plugin repository index, so it is installed from its release.
+          pact plugin install https://github.com/mefellows/pact-matt-plugin/releases/tag/v0.1.1 -y
           pact plugin install csv --version 0.0.6 -y
           pact plugin install avro --version 0.1.3 -y
           pact plugin install protobuf --version 0.8.0 -y
