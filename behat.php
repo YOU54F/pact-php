@@ -22,4 +22,5 @@ return (new Config())
         'compatibility-suite/suites/v4/sync-message/consumer.php',
         'compatibility-suite/suites/v4/matching-rules.php',
         'compatibility-suite/suites/v4/generators.php',
+        'compatibility-suite/suites/v4/plugins.php',
     ]);
