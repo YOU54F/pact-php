@@ -87,17 +87,17 @@ jobs:
       - name: Run Behat
         run: vendor/bin/behat compatibility-suite/pact-compatibility-suite/features/V4 --colors
   v4-plugins:
-    # The plugin features are not in the pinned submodule yet. Set the repository variable
-    # PACT_COMPAT_SUITE_PLUGINS_REF to a pact-compatibility-suite ref that has features/V4/plugins to run them.
-    if: vars.PACT_COMPAT_SUITE_PLUGINS_REF != ''
+    # The plugin features are not in the pinned submodule yet, so this checks out the suite branch that adds
+    # them (YOU54F/pact-compatibility-suite#1). The repository variables PACT_COMPAT_SUITE_PLUGINS_REPOSITORY
+    # and PACT_COMPAT_SUITE_PLUGINS_REF override it.
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          repository: pact-foundation/pact-compatibility-suite
-          ref: ${{ vars.PACT_COMPAT_SUITE_PLUGINS_REF }}
+          repository: ${{ vars.PACT_COMPAT_SUITE_PLUGINS_REPOSITORY || 'YOU54F/pact-compatibility-suite' }}
+          ref: ${{ vars.PACT_COMPAT_SUITE_PLUGINS_REF || 'feat/plugin-features' }}
           path: pact-compatibility-suite-plugins
 
       - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # v2
