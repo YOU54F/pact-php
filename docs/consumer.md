@@ -76,6 +76,78 @@ uuid | Regex to match a uuid. | Value (Defaults to ce118b6e-d8e1-11e7-9296-cec27
 ipv4Address | Regex to match a ipv4 address. | Value (Defaults to 127.0.0.13) | $matcher->ipv4Address('127.0.0.1')
 ipv6Address | Regex to match a ipv6 address. | Value (Defaults to ::ffff:192.0.2.128) | $matcher->ipv6Address('::ffff:192.0.2.1')
 email | Regex to match an address. | Value (hello@pact.io) | $matcher->email('hello@pact.io')
+nullValue | Match a null value. | none | $matcher->nullValue()
+matchAll | Match if all the matchers match (combined with AND). | Value, Matchers | $matcher->matchAll(['key' => 'value'], [$matcher->atLeast(1), $matcher->atMost(2)])
+matchAny | Match if at least one of the matchers matches (combined with OR). See [Combining matchers with OR](#combining-matchers-with-or). | Value, Matchers | $matcher->matchAny('Fred', [$matcher->like(null), $matcher->nullValue()])
+likeOrNull | Match a value of the same type as the example, or null. Shortcut for `matchAny` with `like` and `nullValue`. | Value | $matcher->likeOrNull('Fred')
+
+### Combining matchers with OR
+
+> [!NOTE]
+> This requires pact_ffi TODO(version with pact-foundation/pact-reference#601) or later. Older versions combine the
+> matchers with AND, so a value can never match both `like` and `nullValue`.
+
+`matchAny` applies several matchers to the same value, and the value matches if at least one of them matches. The
+first argument is the example value, the second is the list of alternatives.
+
+```php
+$matcher = new Matcher();
+
+$response = new ProviderResponse();
+$response
+    ->setStatus(200)
+    ->addHeader('Content-Type', 'application/json')
+    ->setBody([
+        // A string, or null
+        'nickname' => $matcher->likeOrNull('Fred'),
+        // A string of digits, or 'unknown'
+        'age' => $matcher->matchAny('42', [
+            $matcher->regex(null, '^\d+$'),
+            $matcher->regex(null, '^unknown$'),
+        ]),
+        // An object, or null. The matchers inside the object still apply when it is not null.
+        'address' => $matcher->matchAny(
+            [
+                'street' => 'Main St',
+                'number' => $matcher->integerV3(42),
+            ],
+            [
+                $matcher->like(null),
+                $matcher->nullValue(),
+            ]
+        ),
+    ]);
+```
+
+`'address'` is written to the pact file as:
+
+```json
+"$.address": {
+  "combine": "OR",
+  "matchers": [{ "match": "type" }, { "match": "null" }]
+},
+"$.address.number": {
+  "combine": "AND",
+  "matchers": [{ "match": "integer" }]
+}
+```
+
+`matchAny` works for bodies, headers and query parameters.
+
+Things to keep in mind:
+
+* Only the example value is used in the consumer test: the mock server always returns it, so your consumer code is
+  never tested with the other alternatives (e.g. with `null`). Write a separate test (or interaction) if your code has to
+  handle them.
+* Every alternative is checked against the actual value, using the example value as the expected value. So matchers
+  that compare with the expected value (like `like` or `equal`) can only describe the example value. For example,
+  `$matcher->matchAny('10', [$matcher->regex(null, '^\d+$'), $matcher->equal('all')])` does not accept `'all'`, use
+  `$matcher->regex(null, '^all$')` instead.
+* Put all the alternatives in the list of matchers. The example value can not be a matcher, and `matchAll`/`matchAny`
+  can not be nested.
+* `matchAny` is not supported by plugins (matching expressions can not combine matchers with OR).
+
+See [example/or-matcher](../example/or-matcher) for a full example.
 
 ## Build the Interaction
 
