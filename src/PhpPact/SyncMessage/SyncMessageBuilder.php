@@ -8,12 +8,14 @@ use PhpPact\SyncMessage\Driver\Interaction\SyncMessageDriverInterface;
 use PhpPact\SyncMessage\Factory\SyncMessageDriverFactory;
 use PhpPact\SyncMessage\Factory\SyncMessageDriverFactoryInterface;
 use PhpPact\Standalone\MockService\MockServerConfigInterface;
+use PhpPact\Standalone\MockService\Model\VerifyResult;
 use PhpPact\SyncMessage\Model\SyncMessage;
 
 class SyncMessageBuilder implements BuilderInterface
 {
     protected SyncMessage $message;
     private SyncMessageDriverInterface $driver;
+    private ?VerifyResult $verifyResult = null;
 
     public function __construct(MockServerConfigInterface $config, ?SyncMessageDriverFactoryInterface $driverFactory = null)
     {
@@ -148,6 +150,17 @@ class SyncMessageBuilder implements BuilderInterface
 
     public function verify(): bool
     {
-        return $this->driver->verifyMessage()->matched;
+        $this->verifyResult = $this->driver->verifyMessage();
+
+        return $this->verifyResult->matched;
+    }
+
+    /**
+     * Result of the last call to {@see self::verify()}: mismatches (JSON) and mock server logs.
+     * Returns null if {@see self::verify()} has not been called yet.
+     */
+    public function getVerifyResult(): ?VerifyResult
+    {
+        return $this->verifyResult;
     }
 }

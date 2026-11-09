@@ -86,7 +86,8 @@
             "composer run-example:xml",
             "composer run-example:graphql",
             "composer run-example:form-urlencoded",
-            "composer run-example:server-sent-events"
+            "composer run-example:server-sent-events",
+            "composer run-example:repeated-headers"
         ],
         "run-examples:windows": [
             "composer run-example:binary:windows",
@@ -102,7 +103,8 @@
             "composer run-example:xml:windows",
             "composer run-example:graphql:windows",
             "composer run-example:form-urlencoded:windows",
-            "composer run-example:server-sent-events:windows"
+            "composer run-example:server-sent-events:windows",
+            "composer run-example:repeated-headers:windows"
         ],
         "run-example:binary:windows": [
             "powershell -Command \"if (Test-Path 'example/binary/pacts/binaryConsumer-binaryProvider.json') { Remove-Item 'example/binary/pacts/binaryConsumer-binaryProvider.json' }\"",
@@ -239,17 +241,25 @@
             "rm -f example/server-sent-events/pacts/sseConsumer-sseProvider.json",
             "cd example/server-sent-events/consumer && phpunit",
             "cd example/server-sent-events/provider && phpunit"
+        ],
+        "run-example:repeated-headers:windows": [
+            "powershell -Command \"if (Test-Path 'example/repeated-headers/pacts/repeatedHeadersConsumer-repeatedHeadersProvider.json') { Remove-Item 'example/repeated-headers/pacts/repeatedHeadersConsumer-repeatedHeadersProvider.json' }\"",
+            "cd example/repeated-headers/consumer && phpunit --process-isolation"
+        ],
+        "run-example:repeated-headers": [
+            "rm -f example/repeated-headers/pacts/repeatedHeadersConsumer-repeatedHeadersProvider.json",
+            "cd example/repeated-headers/consumer && phpunit"
         ]
     },
     "extra": {
         "downloads": {
             "pact-ffi-headers": {
-                "version": "0.5.10",
-                "url": "https://github.com/pact-foundation/pact-reference/releases/download/libpact_ffi-v{$version}/pact.h",
+                "version": "0.5.13-rc.1",
+                "url": "https://github.com/YOU54F/pact-reference/releases/download/libpact_ffi-v{$version}/pact.h",
                 "path": "bin/pact-ffi-headers/pact.h"
             },
             "pact-ffi-lib": {
-                "version": "0.5.10",
+                "version": "0.5.13-rc.1",
                 "variables": {
                     "{$prefix}": "PHP_OS_FAMILY === 'Windows' ? 'pact_ffi' : 'libpact_ffi'",
                     "{$os}": "PHP_OS === 'Darwin' ? 'macos' : strtolower(PHP_OS_FAMILY)",
@@ -257,7 +267,7 @@
                     "{$musl}": "PHP_OS === 'Linux' && musl() === true ? '-musl' : ''",
                     "{$extension}": "PHP_OS_FAMILY === 'Windows' ? 'dll' : (PHP_OS === 'Darwin' ? 'dylib' : 'so')"
                 },
-                "url": "https://github.com/pact-foundation/pact-reference/releases/download/libpact_ffi-v{$version}/{$prefix}-{$os}-{$architecture}{$musl}.{$extension}.gz",
+                "url": "https://github.com/YOU54F/pact-reference/releases/download/libpact_ffi-v{$version}/{$prefix}-{$os}-{$architecture}{$musl}.{$extension}.gz",
                 "path": "bin/pact-ffi-lib/pact.{$extension}"
             },
             "pact-stub-server": {

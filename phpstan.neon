@@ -34,6 +34,7 @@ parameters:
         - example/protobuf-async-message/provider/autoload.php
         - example/protobuf-sync-message/consumer/autoload.php
         - example/protobuf-sync-message/provider/autoload.php
+        - example/repeated-headers/consumer/autoload.php
         - example/server-sent-events/consumer/autoload.php
         - example/server-sent-events/provider/autoload.php
         - example/stub-server/consumer/autoload.php

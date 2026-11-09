@@ -65,6 +65,8 @@ interface ClientInterface
 
     public function mockServerMismatches(int $port): string;
 
+    public function mockServerLogs(int $port): string;
+
     public function writePactFile(int $port, string $directory, bool $overwrite): int;
 
     public function createMockServerForTransport(int $pact, string $host, int $port, string $transport, ?string $transportConfig): int;

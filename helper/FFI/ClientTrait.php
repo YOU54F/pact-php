@@ -396,6 +396,15 @@ trait ClientTrait
         }
     }
 
+    protected function expectsMockServerLogs(int $port, string $result): void
+    {
+        $this->client
+            ->expects($this->once())
+            ->method('mockServerLogs')
+            ->with($port)
+            ->willReturn($result);
+    }
+
     protected function expectsWritePactFile(int $port, string $directory, bool $overwrite, int $result, bool $matched): void
     {
         if ($matched) {

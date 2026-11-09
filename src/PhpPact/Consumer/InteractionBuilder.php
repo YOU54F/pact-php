@@ -9,6 +9,7 @@ use PhpPact\Consumer\Model\ConsumerRequest;
 use PhpPact\Consumer\Model\Interaction;
 use PhpPact\Consumer\Model\ProviderResponse;
 use PhpPact\Standalone\MockService\MockServerConfigInterface;
+use PhpPact\Standalone\MockService\Model\VerifyResult;
 
 /**
  * Build an interaction and send it to the Ruby Standalone Mock Service
@@ -17,6 +18,7 @@ class InteractionBuilder implements BuilderInterface
 {
     private readonly InteractionDriverInterface $driver;
     private Interaction $interaction;
+    private ?VerifyResult $verifyResult = null;
 
     public function __construct(MockServerConfigInterface $config, ?InteractionDriverFactoryInterface $driverFactory = null)
     {
@@ -79,7 +81,18 @@ class InteractionBuilder implements BuilderInterface
      */
     public function verify(): bool
     {
-        return $this->driver->verifyInteractions()->matched;
+        $this->verifyResult = $this->driver->verifyInteractions();
+
+        return $this->verifyResult->matched;
+    }
+
+    /**
+     * Result of the last call to {@see self::verify()}: mismatches (JSON) and mock server logs.
+     * Returns null if {@see self::verify()} has not been called yet.
+     */
+    public function getVerifyResult(): ?VerifyResult
+    {
+        return $this->verifyResult;
     }
 
     /**

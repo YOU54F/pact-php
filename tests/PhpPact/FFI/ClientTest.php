@@ -186,6 +186,12 @@ class ClientTest extends TestCase
         $this->assertSame('', $result);
     }
 
+    public function testMockServerLogs(): void
+    {
+        $result = $this->client->mockServerLogs(1234);
+        $this->assertSame('', $result);
+    }
+
     public function testWritePactFile(): void
     {
         $result = $this->client->writePactFile(1234, 'test', true);
