@@ -1,0 +1,180 @@
+{
+  "consumer": {
+    "name": "orMatcherConsumer"
+  },
+  "interactions": [
+    {
+      "description": "A put request to /users/{id}",
+      "pending": false,
+      "request": {
+        "body": {
+          "content": {
+            "address": {
+              "number": 42,
+              "street": "Main St"
+            },
+            "nickname": "Fred"
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": [
+            "application/json"
+          ],
+          "X-Api-Version": [
+            "2"
+          ]
+        },
+        "matchingRules": {
+          "body": {
+            "$.address": {
+              "combine": "OR",
+              "matchers": [
+                {
+                  "match": "type"
+                },
+                {
+                  "match": "null"
+                }
+              ]
+            },
+            "$.address.number": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "integer"
+                }
+              ]
+            },
+            "$.nickname": {
+              "combine": "OR",
+              "matchers": [
+                {
+                  "match": "type"
+                },
+                {
+                  "match": "null"
+                }
+              ]
+            }
+          },
+          "header": {
+            "X-Api-Version": {
+              "combine": "OR",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "^\\d+$"
+                },
+                {
+                  "match": "regex",
+                  "regex": "^latest$"
+                }
+              ]
+            }
+          },
+          "query": {
+            "limit": {
+              "combine": "OR",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "^\\d+$"
+                },
+                {
+                  "match": "regex",
+                  "regex": "^all$"
+                }
+              ]
+            }
+          }
+        },
+        "method": "PUT",
+        "path": "/users/1",
+        "query": {
+          "limit": [
+            "10"
+          ]
+        }
+      },
+      "response": {
+        "body": {
+          "content": {
+            "address": {
+              "number": 42,
+              "street": "Main St"
+            },
+            "id": 1,
+            "nickname": "Fred"
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": [
+            "application/json"
+          ]
+        },
+        "matchingRules": {
+          "body": {
+            "$.address": {
+              "combine": "OR",
+              "matchers": [
+                {
+                  "match": "type"
+                },
+                {
+                  "match": "null"
+                }
+              ]
+            },
+            "$.address.number": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "integer"
+                }
+              ]
+            },
+            "$.id": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "integer"
+                }
+              ]
+            },
+            "$.nickname": {
+              "combine": "OR",
+              "matchers": [
+                {
+                  "match": "type"
+                },
+                {
+                  "match": "null"
+                }
+              ]
+            }
+          }
+        },
+        "status": 200
+      },
+      "transport": "http",
+      "type": "Synchronous/HTTP"
+    }
+  ],
+  "metadata": {
+    "pactRust": {
+      "ffi": "0.5.12",
+      "mockserver": "2.2.6",
+      "models": "1.3.17"
+    },
+    "pactSpecification": {
+      "version": "4.0"
+    }
+  },
+  "provider": {
+    "name": "orMatcherProvider"
+  }
+}

@@ -31,6 +31,7 @@ use PhpPact\Consumer\Matcher\Matchers\Equality;
 use PhpPact\Consumer\Matcher\Matchers\Includes;
 use PhpPact\Consumer\Matcher\Matchers\Integer;
 use PhpPact\Consumer\Matcher\Matchers\MatchAll;
+use PhpPact\Consumer\Matcher\Matchers\MatchAny;
 use PhpPact\Consumer\Matcher\Matchers\MatchingField;
 use PhpPact\Consumer\Matcher\Matchers\Max;
 use PhpPact\Consumer\Matcher\Matchers\MaxType;
@@ -550,6 +551,22 @@ class MatcherTest extends TestCase
     {
         $this->assertInstanceOf(MatchAll::class, $result = $this->matcher->matchAll(['key' => 'value'], [$this->matcher->like('text')]));
         $this->assertInstanceOf(JsonFormatter::class, $result->getFormatter());
+    }
+
+    public function testMatchAny(): void
+    {
+        $this->assertInstanceOf(MatchAny::class, $result = $this->matcher->matchAny('value', [$this->matcher->like('text'), $this->matcher->nullValue()]));
+        $this->assertInstanceOf(JsonFormatter::class, $result->getFormatter());
+    }
+
+    public function testLikeOrNull(): void
+    {
+        $this->assertInstanceOf(MatchAny::class, $result = $this->matcher->likeOrNull(['key' => 'value']));
+        $this->assertInstanceOf(JsonFormatter::class, $result->getFormatter());
+        $this->assertJsonStringEqualsJsonString(
+            '{"pact:matcher:type":[{"pact:matcher:type":"type","value":null},{"pact:matcher:type":"null"}],"pact:matcher:combine":"OR","value":{"key":"value"}}',
+            (string) json_encode($result)
+        );
     }
 
     public function testAtLeast(): void
