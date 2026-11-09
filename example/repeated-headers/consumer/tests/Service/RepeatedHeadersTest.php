@@ -124,7 +124,12 @@ class RepeatedHeadersTest extends TestCase
         $this->assertStringNotContainsString(self::DEPRECATION_WARNING, $logs);
     }
 
-    public function testH6bQuotedValueMatchesPerLineWithDeprecationWarning(): void
+    /**
+     * Whitespace inside a quoted-string is literal (RFC 9110 §5.6.4), so the
+     * expected `"x , y"` does not match the sent `"x, y"`, and there is no
+     * per-line fallback that would log the deprecation warning.
+     */
+    public function testH6bQuotedValueWhitespaceIsLiteralAndDoesNotMatch(): void
     {
         [$status, $matched, $mismatches, $logs] = $this->runInteraction(
             'H6b quoted value containing a comma, one per field line',
@@ -133,10 +138,10 @@ class RepeatedHeadersTest extends TestCase
             [['X-Request', '"x, y"'], ['X-Request', 'z']],
         );
 
-        $this->assertSame(200, $status);
-        $this->assertTrue($matched, $mismatches);
-        $this->assertStringContainsString(self::DEPRECATION_WARNING, $logs);
-        $this->assertStringContainsString('only matched when its field lines were compared one at a time', $logs);
+        $this->assertNotSame(200, $status);
+        $this->assertFalse($matched);
+        $this->assertNotEmpty(json_decode($mismatches, true), $mismatches);
+        $this->assertStringNotContainsString(self::DEPRECATION_WARNING, $logs);
     }
 
     /**

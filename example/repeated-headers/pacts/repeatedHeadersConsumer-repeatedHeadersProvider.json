@@ -82,19 +82,6 @@
       }
     },
     {
-      "description": "H6b quoted value containing a comma, one per field line",
-      "request": {
-        "headers": {
-          "X-Request": "\"x , y\", z"
-        },
-        "method": "GET",
-        "path": "/headers"
-      },
-      "response": {
-        "status": 200
-      }
-    },
-    {
       "description": "H8a Link values containing commas, one per field line",
       "request": {
         "headers": {
@@ -123,7 +110,7 @@
   ],
   "metadata": {
     "pactRust": {
-      "ffi": "0.5.12",
+      "ffi": "0.5.13-rc.1",
       "mockserver": "2.2.6",
       "models": "1.3.17"
     },
