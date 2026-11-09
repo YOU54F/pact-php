@@ -31,6 +31,7 @@ use PhpPact\Consumer\Matcher\Matchers\Equality;
 use PhpPact\Consumer\Matcher\Matchers\Includes;
 use PhpPact\Consumer\Matcher\Matchers\Integer;
 use PhpPact\Consumer\Matcher\Matchers\MatchAll;
+use PhpPact\Consumer\Matcher\Matchers\MatchAny;
 use PhpPact\Consumer\Matcher\Matchers\MatchingField;
 use PhpPact\Consumer\Matcher\Matchers\Max;
 use PhpPact\Consumer\Matcher\Matchers\MaxType;
@@ -567,6 +568,36 @@ class Matcher
         $matcher = new MatchAll($value, $matchers);
 
         return $matcher->withFormatter($this->createFormatter());
+    }
+
+    /**
+     * Match if at least one of the matchers matches (matching rules combined with OR).
+     *
+     * Only the example value is used in the consumer test, the other alternatives are never exercised against
+     * the consumer code. Put all the alternatives in the list of matchers, don't use a matcher as the value.
+     *
+     * NOTE: Requires a pact_ffi version supporting `pact:matcher:combine` (TODO: pact_ffi version)
+     *
+     * @param MatcherInterface[] $matchers
+     */
+    public function matchAny(mixed $value, array $matchers): MatchAny
+    {
+        $matcher = new MatchAny($value, $matchers);
+
+        return $matcher->withFormatter($this->createFormatter());
+    }
+
+    /**
+     * Value that is either null, or has the same type as the example value.
+     *
+     * Shortcut for `matchAny($value, [like(...), nullValue()])`. Matchers inside an array or object value
+     * are still applied to its children, when the value is not null.
+     *
+     * NOTE: Requires a pact_ffi version supporting `pact:matcher:combine` (TODO: pact_ffi version)
+     */
+    public function likeOrNull(mixed $value): MatchAny
+    {
+        return $this->matchAny($value, [$this->like(null), $this->nullValue()]);
     }
 
     /**
