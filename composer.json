@@ -78,6 +78,7 @@
             "composer run-example:generators",
             "composer run-example:json",
             "composer run-example:matchers",
+            "composer run-example:or-matcher",
             "composer run-example:message",
             "composer run-example:multipart",
             "composer run-example:protobuf-async-message",
@@ -94,6 +95,7 @@
             "composer run-example:generators:windows",
             "composer run-example:json:windows",
             "composer run-example:matchers:windows",
+            "composer run-example:or-matcher:windows",
             "composer run-example:message:windows",
             "composer run-example:multipart:windows",
             "composer run-example:protobuf-async-message:windows",
@@ -128,6 +130,11 @@
             "powershell -Command \"if (Test-Path 'example/matchers/pacts/matchersConsumer-matchersProvider.json') { Remove-Item 'example/matchers/pacts/matchersConsumer-matchersProvider.json' }\"",
             "cd example/matchers/consumer && phpunit --process-isolation",
             "cd example/matchers/provider && phpunit --process-isolation"
+        ],
+        "run-example:or-matcher:windows": [
+            "powershell -Command \"if (Test-Path 'example/or-matcher/pacts/orMatcherConsumer-orMatcherProvider.json') { Remove-Item 'example/or-matcher/pacts/orMatcherConsumer-orMatcherProvider.json' }\"",
+            "cd example/or-matcher/consumer && phpunit --process-isolation",
+            "cd example/or-matcher/provider && phpunit --process-isolation"
         ],
         "run-example:message:windows": [
             "powershell -Command \"if (Test-Path 'example/message/pacts/messageConsumer-messageProvider.json') { Remove-Item 'example/message/pacts/messageConsumer-messageProvider.json' }\"",
@@ -191,6 +198,11 @@
             "rm -f example/matchers/pacts/matchersConsumer-matchersProvider.json",
             "cd example/matchers/consumer && phpunit",
             "cd example/matchers/provider && phpunit"
+        ],
+        "run-example:or-matcher": [
+            "rm -f example/or-matcher/pacts/orMatcherConsumer-orMatcherProvider.json",
+            "cd example/or-matcher/consumer && phpunit",
+            "cd example/or-matcher/provider && phpunit"
         ],
         "run-example:message": [
             "rm -f example/message/pacts/messageConsumer-messageProvider.json",

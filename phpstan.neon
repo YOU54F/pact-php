@@ -26,6 +26,8 @@ parameters:
         - example/json/provider/autoload.php
         - example/matchers/consumer/autoload.php
         - example/matchers/provider/autoload.php
+        - example/or-matcher/consumer/autoload.php
+        - example/or-matcher/provider/autoload.php
         - example/message/consumer/autoload.php
         - example/message/provider/autoload.php
         - example/multipart/consumer/autoload.php
